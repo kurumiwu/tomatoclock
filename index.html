@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>番茄鐘</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+
+    /* 標題 */
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5em;
+      color: #333;
+    }
+
+    /* 頁籤區域 */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      background-color: #333;
+      color: white;
+      font-size: 1.2em;
+    }
+
+    .tabs div {
+      padding: 15px 30px;
+      cursor: pointer;
+    }
+
+    .tabs div:hover {
+      background-color: #555;
+    }
+
+    /* 計時器 */
+    .timer {
+      background-color: black;
+      color: white;
+      font-size: 5em;
+      margin: 30px auto;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* 開始按鈕 */
+    .start-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.5em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 40px;
+    }
+
+    .start-btn:hover {
+      background-color: #45a049;
+    }
+
+    /* 手機屏幕調整 */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      .tabs div {
+        font-size: 1em;
+        padding: 10px 20px;
+      }
+
+      .timer {
+        font-size: 4em;
+        width: 90%;
+      }
+
+      .start-btn {
+        font-size: 1.2em;
+        padding: 12px 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>番茄鐘</h1>
+  <div class="tabs">
+    <div>專注時間</div>
+    <div>長休息</div>
+    <div>短休息</div>
+  </div>
+
+  <div class="timer">
+    <span id="countdown">25:00</span>
+  </div>
+
+  <button class="start-btn" onclick="startTimer()">開始</button>
+
+  <script>
+    let countdownDisplay = document.getElementById('countdown');
+    let countdownTime = 25 * 60; // 設定初始時間為25分鐘
+    let timer;
+
+    function startTimer() {
+      if (timer) clearInterval(timer);
+
+      timer = setInterval(function() {
+        let minutes = Math.floor(countdownTime / 60);
+        let seconds = countdownTime % 60;
+
+        if (seconds < 10) seconds = '0' + seconds;
+        countdownDisplay.textContent = minutes + ':' + seconds;
+
+        if (countdownTime === 0) {
+          clearInterval(timer);
+          alert('時間到！');
+        } else {
+          countdownTime--;
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
