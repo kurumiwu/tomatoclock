@@ -54,8 +54,12 @@
       align-items: center;
     }
 
-    /* 開始按鈕 */
-    .start-btn {
+    /* 按鈕 */
+    .btn-container {
+      margin-top: 20px;
+    }
+
+    .pause-btn, .continue-btn, .reset-btn,.start-btn {
       background-color: #4CAF50;
       color: white;
       padding: 15px 30px;
@@ -63,11 +67,23 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin-bottom: 40px;
+      margin: 5px;
+    }
+  
+
+    
+
+    .pause-btn {
+      background-color: #f39c12;
     }
 
-    .start-btn:hover {
-      background-color: #45a049;
+    .reset-btn {
+      background-color: #e74c3c;
+    }
+
+    /* 隱藏暫停、繼續和重置按鈕，直到點擊開始 */
+    .pause-btn, .continue-btn, .reset-btn {
+      display: none;
     }
 
     /* 手機屏幕調整 */
@@ -86,7 +102,7 @@
         width: 90%;
       }
 
-      .start-btn {
+      .pause-btn, .continue-btn, .reset-btn,.start-btn {
         font-size: 1.2em;
         padding: 12px 25px;
       }
@@ -105,16 +121,32 @@
     <span id="countdown">25:00</span>
   </div>
 
-  <button class="start-btn" onclick="startTimer()">開始</button>
+  <div class="btn-container">
+    <button  class="start-btn" id="start-btn" onclick="startTimer()">開始</button>
+    <button class="pause-btn" onclick="pauseTimer()">暫停</button>
+    <button class="continue-btn" onclick="continueTimer()">繼續</button>
+    <button class="reset-btn" onclick="resetTimer()">重置</button>
+  </div>
 
   <script>
     let countdownDisplay = document.getElementById('countdown');
     let countdownTime = 25 * 60; // 設定初始時間為25分鐘
     let timer;
+    let isPaused = false; // 用來記錄計時是否暫停
+    let isStarted = false; // 記錄計時是否已開始
 
     function startTimer() {
-      if (timer) clearInterval(timer);
+      if (!isStarted) {
+        // 如果是第一次開始計時
+        isStarted = true;
+        document.querySelector('.pause-btn').style.display = 'inline-block';
+        document.querySelector('.reset-btn').style.display = 'inline-block';
+        document.getElementById('start-btn').style.display = 'none';
+        startCountdown();
+      }
+    }
 
+    function startCountdown() {
       timer = setInterval(function() {
         let minutes = Math.floor(countdownTime / 60);
         let seconds = countdownTime % 60;
@@ -129,6 +161,44 @@
           countdownTime--;
         }
       }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timer); // 停止計時
+      isPaused = true;
+      document.querySelector('.continue-btn').style.display = 'inline-block';
+      document.querySelector('.pause-btn').style.display = 'none';
+    }
+
+    function continueTimer() {
+      // 繼續計時
+      isPaused = false;
+      document.querySelector('.continue-btn').style.display = 'none';
+      document.querySelector('.pause-btn').style.display = 'inline-block';
+      startCountdown();
+    }
+
+    function resetTimer() {
+      clearInterval(timer); // 停止計時
+      countdownTime = 25 * 60; // 重設為25分鐘
+      countdownDisplay.textContent = '25:00';
+
+      // 顯示開始按鈕，隱藏暫停和繼續按鈕
+      document.querySelector('.pause-btn').style.display = 'none';
+      document.querySelector('.continue-btn').style.display = 'none';
+      document.querySelector('.reset-btn').style.display = 'none';
+      document.getElementById('start-btn').style.display = 'inline-block'; // 顯示開始按鈕
+
+      // 重置狀態
+      isPaused = false;
+      isStarted = false;
+    }
+
+    // 當頁面加載後，會顯示「開始」按鈕並隱藏其他按鈕
+    window.onload = function() {
+      document.querySelector('.pause-btn').style.display = 'none';
+      document.querySelector('.continue-btn').style.display = 'none';
+      document.querySelector('.reset-btn').style.display = 'none';
     }
   </script>
 </body>
